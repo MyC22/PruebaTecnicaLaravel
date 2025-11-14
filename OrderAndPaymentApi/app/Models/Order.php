@@ -19,11 +19,23 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'total_amout' => 'integer',
+        'total_amount' => 'integer',
     ];
 
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    //Convierte el valor enviado en decimal (por ejemplo 503.50)
+    public function setTotalAmountAttribute($value)
+    {
+        $this->attributes['total_amount'] = (int) round($value * 100);
+    }
+
+    //Devuelve el total de la orden en formato decimal
+    public function getTotalAmountFormattedAttribute(): float
+    {
+        return (float) number_format($this->total_amount / 100, 2, '.', '');
     }
 }

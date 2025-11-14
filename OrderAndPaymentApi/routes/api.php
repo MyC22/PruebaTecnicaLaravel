@@ -1,35 +1,73 @@
 <?php
 
 use App\Http\Controllers\Api\Orders\OrderController;
+use App\Http\Controllers\Api\Payment\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-//Listar todos los eliminados
-Route::get('orders/trashed', [OrderController::class, 'trashed']);
+Route::prefix('orders')->group(function () {
+    //Listar todos los eliminados
+    Route::get('trashed', [OrderController::class, 'trashed']);
 
-//Listar un eliminado en especifico
-Route::get('orders/trashed/{id}', [OrderController::class, 'showTrashed']);
+    //Listar un eliminado en especifico
+    Route::get('trashed/{id}', [OrderController::class, 'showTrashed']);
 
-Route::get('orders/pending', [OrderController::class, 'pending']);
-Route::get('orders/paid', [OrderController::class, 'paid']);
-Route::get('orders/failed', [OrderController::class, 'failed']);
+    //Listar pedidos por el estado
+    Route::get('pending', [OrderController::class, 'pending']);
+    Route::get('paid', [OrderController::class, 'paid']);
+    Route::get('failed', [OrderController::class, 'failed']);
 
-//Listar todo
-Route::get('orders/', [OrderController::class, 'index']);
+    //Listar todo
+    Route::get('/', [OrderController::class, 'index']);
 
-//Ruta para registrar Orden
-Route::post('orders/register', [OrderController::class, 'store']);
+    //Ruta para registrar Orden
+    Route::post('register', [OrderController::class, 'store']);
 
-//Ruta para buscar una Orden
-Route::get('orders/{id}', [OrderController::class, 'show']);
+    //Ruta para buscar una Orden
+    Route::get('{id}', [OrderController::class, 'show']);
 
-//Ruta para actualizar una Orden
-Route::put('orders/{id}', [OrderController::class, 'update']);
+    //Ruta para actualizar una Orden
+    Route::put('{id}', [OrderController::class, 'update']);
 
-//Ruta para actualizar especificamente
-Route::patch('orders/{id}', [OrderController::class, 'update']);
+    //Ruta para actualizar especificamente
+    Route::patch('{id}', [OrderController::class, 'update']);
 
-//Ruta para eliminar logicamente
-Route::delete('orders/{id}', [OrderController::class, 'destroy']);
+    //Ruta para eliminar logicamente
+    Route::delete('{id}', [OrderController::class, 'destroy']);
 
-//Ruta para recuperar logicamente
-Route::post('orders/{id}/restore', [OrderController::class, 'restore']);
+    //Ruta para recuperar logicamente
+    Route::post('{id}/restore', [OrderController::class, 'restore']);
+});
+
+
+
+Route::prefix('payments')->group(function () {
+    //Ruta para Payments
+    //Listar todos los eliminados
+    Route::get('trashed', [PaymentController::class, 'trashed']);
+
+    //Listar un eliminado en especifico
+    Route::get('trashed/{id}/show', [PaymentController::class, 'showWithTrashed'])->name('payments.trashed.show');
+
+    //Restaurar un eliminado
+    Route::post('{id}/restore', [PaymentController::class, 'restore']);
+
+    //Listar dependiendo del estado del pago
+    Route::get('success', [PaymentController::class, 'success'])->name('payments.success');
+    Route::get('failed', [PaymentController::class, 'failed'])->name('payments.failed');
+
+    //Listar todos los pedidos
+    Route::get('/', [PaymentController::class, 'index']);
+
+    //Mostrar un solo pago
+    Route::get('/{payment}', [PaymentController::class, 'show']);
+
+    //Actualizar un pago completo o solo una parte
+    Route::put('/{payment}/update', [PaymentController::class, 'update']);
+    Route::patch('/{payment}/update', [PaymentController::class, 'update']);
+
+    //Remover pago de forma logica
+    Route::delete('/{payment}/delete', [PaymentController::class, 'destroy']);
+});
+
+//Pagar la orden
+Route::post('orders/{order}/payments', [PaymentController::class, 'store'])->name('payments.register');

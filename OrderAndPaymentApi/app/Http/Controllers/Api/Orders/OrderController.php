@@ -18,9 +18,9 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Order::withCount('payments')
-        ->with('payments')
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);
+            ->with('payments')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return OrderResource::collection($orders);
     }
@@ -46,7 +46,7 @@ class OrderController extends Controller
     }
 
     /*Buscar Orden por ID*/
-    public function show($id):JsonResponse
+    public function show($id): JsonResponse
     {
         $order = Order::with('payments')->find($id);
         if (!$order) {
@@ -62,12 +62,16 @@ class OrderController extends Controller
         $order = Order::withTrashed()->find($id);
 
         if (!$order) {
-            return response()->json(['message' => 'Orden no encontrado'],404);
+            return response()->json(['message' => 'Orden no encontrado'], 404);
+        }
+
+        if ($order->trashed()) {
+            return response()->json(['message' => 'No se puede actualizar un pedido eliminado'], 422);
         }
 
         $data = $request->validated();
 
-        $updated = DB::transaction(function () use ($order, $data){
+        $updated = DB::transaction(function () use ($order, $data) {
             $order->fill($data);
 
             if (!$order->isDirty()) {
@@ -79,30 +83,40 @@ class OrderController extends Controller
         });
 
         if ($updated == null) {
-            return response()->json(['message' => 'No se realizaron cambios porque los datos son iguales'
-                                    ,'order' => new OrderResource($order)], 200);
+            return response()->json([
+                'message' => 'No se realizaron cambios porque los datos son iguales',
+                'order' => new OrderResource($order)
+            ], 200);
         }
 
-        return response()->json(['message' => 'Pedido actualizado correctamente',
-                                 'order' => new OrderResource($updated)], 200);
+        return response()->json([
+            'message' => 'Pedido actualizado correctamente',
+            'order' => new OrderResource($updated)
+        ], 200);
     }
 
     /*Remover logicamente pero no fisicamente */
     public function destroy($id): JsonResponse
     {
-        $order = Order::find($id);
+        $order = Order::withTrashed()->find($id);
 
         if (!$order) {
-            return response()->json(['message' => 'Pedido no encontrado'],404);
+            return response()->json(['message' => 'Pedido no encontrado'], 404);
+        }
+
+        if ($order->trashed()) {
+            return response()->json(['message' => 'Este pedido ya está eliminado'], 422);
         }
 
         DB::transaction(function () use ($order) {
             $order->delete();
         });
 
-        return response()->json(['message' => 'Pedido eliminado correctamente',
-                                 'order_id' => $order->id,
-                                 'deleted_at' => $order->delete_at,], 200);
+        return response()->json([
+            'message' => 'Pedido eliminado correctamente',
+            'order_id' => $order->id,
+            'deleted_at' => $order->deleted_at,
+        ], 200);
     }
 
     /*Restaurar Orden Eliminada */
@@ -111,19 +125,21 @@ class OrderController extends Controller
         $order = Order::withTrashed()->find($id);
 
         if (!$order) {
-            return response()->json(['message' => 'Orden no encontrado'],404);
+            return response()->json(['message' => 'Orden no encontrado'], 404);
         }
 
         if (!$order->trashed()) {
-            return response()->json(['message' => 'Esta Orden no esta eliminada'],422);
+            return response()->json(['message' => 'Esta Orden no esta eliminada'], 422);
         }
 
-        DB::transaction(function () use ($order){
+        DB::transaction(function () use ($order) {
             $order->restore();
         });
 
-        return response()->json(['message' => 'Pedido restaurado correctamente',
-                                 'order' => new OrderResource($order->fresh())], 200);
+        return response()->json([
+            'message' => 'Pedido restaurado correctamente',
+            'order' => new OrderResource($order->fresh())
+        ], 200);
     }
 
     /*Listar ordenes eliminadas */
@@ -147,10 +163,10 @@ class OrderController extends Controller
     /*Mostrar orden elimiada especifica */
     public function showTrashed($id)
     {
-        $order = Order::withTrashed()->find($id);
+        $order = Order::onlyTrashed()->find($id);
 
         if (!$order) {
-            return response()->json(['message' => 'Orden eliminada no encontrado'],404);
+            return response()->json(['message' => 'Orden eliminada no encontrada'], 404);
         }
 
         return response()->json(new OrderResource($order), 200);
@@ -191,7 +207,4 @@ class OrderController extends Controller
         $orders = $query->paginate(10);
         return OrderResource::collection($orders);
     }
-
-    
-
 }

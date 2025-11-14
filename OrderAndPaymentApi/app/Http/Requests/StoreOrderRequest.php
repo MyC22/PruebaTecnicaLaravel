@@ -34,7 +34,7 @@ class StoreOrderRequest extends FormRequest
                 'max:50',
                 Rule::unique('orders', 'customer_phone'),
             ],
-            'total_amount' => 'required|integer|min:1',
+            'total_amount' => 'required|numeric|min:0',
             'currency' => 'required|string|size:3',
         ];
     }
@@ -48,7 +48,7 @@ class StoreOrderRequest extends FormRequest
             'customer_email.unique' => 'El correo ya se encuentra registrado',
             'customer_phone.required' => 'El numero de telefono ya se encuentra registrado',
             'total_amount.required' => 'El monto total de la orden es obligatorio',
-            'total_amount.integer' => 'El monto total debe ser un numero entero',
+            'total_amount.numeric' => 'El monto total debe ser un número valido',
             'currency.size' => 'La moneda debe ser un código ISO de 3 letras '
         ];
     }
