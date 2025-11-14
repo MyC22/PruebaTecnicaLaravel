@@ -26,15 +26,20 @@ class PaymentGatewayService
                 'amount' => $payment->amount,
                 'attempt' => $payment->attempt_number,
             ]);
-        } catch (\Throwable $e ) {
+        } catch (\Throwable $e) {
             return ['status' => 'failed', 'reference' => null];
         }
 
         $body = $response->json();
 
-        return[
+        return [
             'status' => Arr::get($body, 'status', 'failed'),
-            'reference' => Arr::get($body, 'reference', 'null'),
+            'reference' => Arr::get($body, 'reference', null),
         ];
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 }

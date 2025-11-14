@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'order_id',
@@ -25,6 +26,11 @@ class Payment extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function setAmountAttribute($value): void
+    {
+        $this->attributes['amount'] = (int) round($value * 100);
     }
 
     public function getAmountFormattedAttribute():float

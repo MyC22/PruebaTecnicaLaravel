@@ -63,6 +63,7 @@ class PaymentController extends Controller
             ->setStatusCode(200);
     }
 
+    //Pagar las ordenes
     public function store(StorePaymentRequest $request, Order $order): JsonResponse
     {
         if ($order->trashed()) {

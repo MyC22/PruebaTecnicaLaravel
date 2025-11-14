@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePaymentRequest extends FormRequest
 {
@@ -23,8 +24,14 @@ class UpdatePaymentRequest extends FormRequest
     {
         return [
             'status' => 'sometimes|required|in:pending,success,failed',
-            'amount' => 'sometimes|required|integer|min:1',
-            'payment_method' => 'sometimes|required|string|max:50',
+            'amount' => 'sometimes|required|numeric|min:0',
+            'payment_method' => [
+            'sometimes',
+            'required',
+            'string',
+            'max:50',
+            Rule::in(['tarjeta','paypal','yape','pagoefectivo']),
+        ],
         ];
     }
 
@@ -33,7 +40,7 @@ class UpdatePaymentRequest extends FormRequest
     {
         return [
             'status.in' => 'El estado debe ser: pending, success o failed',
-            'amount.integer' => 'El monto debe ser un numero',
+            'amount.numeric' => 'El monto debe ser un numero valido',
         ];
     }
 }

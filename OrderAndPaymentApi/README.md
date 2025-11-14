@@ -1,59 +1,187 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+git clone https://github.com/MyC22/PruebaTecnicaLaravel.git
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+composer install
+npm install
+npm run dev
+php artisan install:api 
 
-## About Laravel
+cp .env.example .env
+php artisan key:generate
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=orderandpaymentapi
+DB_USERNAME=root
+DB_PASSWORD=secret
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Para este proyecto se uso https://app.beeceptor.com/ debera ingresar y registrar un nombre para que se le genere una URL y al final de la url que te de agregarle /confirm
+luego debera crear reglas mock:
+1. /confirm
+-Metodo POST 
+-Request condition : Request path exactly matches
+-Match value/expression: /confirm
 
-## Learning Laravel
+Return HTTP status: 200
+Response headers:
+{
+  "Content-Type": "application/json"
+}
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Response body: 
+{
+  "status": "success",
+  "reference": "gw-test"
+}
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. /confirm/fail
+-Metodo POST 
+-Request condition : Request path exactly matches
+-Match value/expression: /confirm
 
-## Laravel Sponsors
+Return HTTP status: 200
+Response headers:
+{
+  "Content-Type": "application/json"
+}
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Response body: 
+{
+  "status": "failed",
+  "reference": null
+}
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+PAYMENT_GATEWAY_URL=https://example.com/confirm
 
-## Code of Conduct
+Servidor local:
+php artisan serve
+php artisan migrate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Endpoints
+Órdenes
+Método	Ruta	Descripción
+GET	/api/orders/	Listar todas las órdenes
+GET	/api/orders/{id}	Ver detalles de una orden
+POST	/api/orders/register	Crear una nueva orden
+PUT/PATCH	/api/orders/{id}	Actualizar una orden
+DELETE	/api/orders/{id}	Eliminar una orden (soft delete)
+POST	/api/orders/{id}/restore	Restaurar una orden eliminada
+GET	/api/orders/trashed	Listar todas las órdenes eliminadas
+GET	/api/orders/trashed/{id}	Ver una orden eliminada específica
+GET	/api/orders/pending	Listar órdenes con estado pending
+GET	/api/orders/paid	Listar órdenes con estado paid
+GET	/api/orders/failed	Listar órdenes con estado failed
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+Pagos
+Método	Ruta	Descripción
+GET	/api/payments/	Listar todos los pagos
+GET	/api/payments/{payment}	Ver detalles de un pago
+POST	/api/orders/{order}/payments	Crear un pago para una orden
+PUT/PATCH	/api/payments/{payment}/update	Actualizar un pago (parcial o completo)
+DELETE	/api/payments/{payment}/delete	Eliminar un pago (soft delete)
+POST	/api/payments/{payment}/restore	Restaurar un pago eliminado
+GET	/api/payments/trashed	Listar todos los pagos eliminados
+GET	/api/payments/trashed/{id}/show	Ver un pago eliminado específico
+GET	/api/payments/success	Listar pagos exitosos
+GET	/api/payments/failed	Listar pagos fallidos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+Para poder crear una orden:
+{
+  "customer_name": "nombre de ejemplo",
+  "customer_email": "ejemplo@examples.com", 
+  "customer_phone": "+51 9604552888",
+  "total_amount": 505.65,
+  "currency": "PEN"
+}
+
+{
+    "data": {
+        "id": 1,
+        "customer_name": "nombre de ejemplo",
+        "customer_email": "ejemplo@examples.com",
+        "customer_phone": "+51 9604552888",
+        "total_amount": 50565,
+        "currency": "PEN",
+        "status": "pending",
+        "created_at": "2025-11-14T23:15:56.000000Z",
+        "updated_at": "2025-11-14T23:15:56.000000Z"
+    }
+}
+
+
+para poder pagar esa orden
+{
+  "payment_method": "paypal",
+  "amount": 504.5
+}
+
+{
+    "data": {
+        "id": 1,
+        "order_id": 1,
+        "amount_cents": 50565,
+        "amount": 505.65,
+        "payment_method": "paypal",
+        "status": "success",
+        "attempt_number": 1,
+        "external_reference": "gw-test",
+        "created_at": "2025-11-14T23:10:03.000000Z",
+        "deleted_at": null
+    },
+    "message": "Pago creado correctamente"
+}
+
+
+
+Decisiones técnicas importantes
+
+Transacciones en la base de datos (DB::transaction)
+Lo use para crear, actualizar o eliminar órdenes y pagos para garantizar que las operaciones sean seguras.
+
+
+Monto en centavos (amount_cents)
+Internamente los pagos se almacenan como enteros en centavos para evitar problemas de precisión con decimales en cálculos monetarios.
+El cliente puede enviar 504.5 y el sistema lo convierte automáticamente a 50450 centavos.
+Esto evita errores de redondeo en sumas, conversiones de divisas y reportes financieros.
+
+Soft Deletes (SoftDeletes)
+Se usa en ordenes y pagos para permitir eliminar registros de forma logica y poder restaurarlos despue
+Evita perdida de datos y permite auditoría de cambios.
+
+Uso de strings para estados y métodos de pago
+Se usan campos string en lugar de enum para mayor flexibilidad.
+Permite agregar nuevos estados o métodos de pago sin tener que modificar la base de datos ni hacer migraciones.
+
+Validaciones se manejan mediante FormRequest (StorePaymentRequest, UpdatePaymentRequest) con Rule::in().
+Validaciones centralizadas (FormRequest)
+Todas las reglas de negocio y mensajes personalizados se definen en Requests.
+Mejora la mantenibilidad y claridad del código.
+Permite reutilizar las reglas en diferentes endpoints.
+
+Tests unitarios y de feature
+Se incluyen para validar lógica de negocio, reglas de validación y comportamiento de endpoints.
+Unit tests: Validaciones y servicios (ej: PaymentGatewayService).
+Feature tests: Endpoints y flujos completos, incluyendo errores y soft deletes.
+
+
+
+Testing
+
+Ejecutar todos los tests unitarios:
+php artisan test --testsuite=Unit
+
+
+Ejecutar tests de feature:
+php artisan test --testsuite=Feature
+
+
+Este proyecto está preparado para entorno local, pero se puede adaptar a producción cambiando .env.
+

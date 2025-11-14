@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Orders\OrderController;
 use App\Http\Controllers\Api\Payment\PaymentController;
 use Illuminate\Support\Facades\Route;
 
+//Ruta para Ordenes
 Route::prefix('orders')->group(function () {
     //Listar todos los eliminados
     Route::get('trashed', [OrderController::class, 'trashed']);
@@ -39,9 +40,8 @@ Route::prefix('orders')->group(function () {
 });
 
 
-
+//Ruta para Payments
 Route::prefix('payments')->group(function () {
-    //Ruta para Payments
     //Listar todos los eliminados
     Route::get('trashed', [PaymentController::class, 'trashed']);
 

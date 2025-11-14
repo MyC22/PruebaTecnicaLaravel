@@ -25,7 +25,7 @@ class UpdateOrderRequest extends FormRequest
         $orderId = $this->route('id');
 
         return [
-            'customer_name' => 'required|string|max:255',
+            'customer_name' => 'sometimes|string|max:255',
             'customer_email' => [
                 'email',
                 'max:255',
