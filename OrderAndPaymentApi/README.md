@@ -52,6 +52,9 @@ Response body:
   "reference": null
 }
 
+al crear una orden o pagar una orden o actualizar una orden o actulizar un pago en los headers debar agregar
+key: Accept value:application/json
+key: Content-Type  value:application/json
 
 
 
