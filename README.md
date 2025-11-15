@@ -11,13 +11,6 @@ Este proyecto es una API en Laravel para gestionar órdenes y pagos. Incluye:
 * Transacciones DB para operaciones críticas
 * Tests unitarios y de feature
 
-## Requisitos
-
-* PHP >= 8.x
-* Composer
-* Node.js & npm
-* MySQL (u otra BD compatible)
-
 ## Instalación (rápida)
 
 Ejecuta los comandos desde la raíz del proyecto:
