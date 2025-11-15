@@ -1,12 +1,7 @@
 # PruebaTecnicaLaravel
 
-**API de ejemplo para órdenes y pagos**
 
-> Versión mejorada del README para que se vea clara y profesional en GitHub.
-
----
-
-## 🚀 Resumen
+## Resumen
 
 Este proyecto es una API en Laravel para gestionar órdenes y pagos. Incluye:
 
@@ -16,14 +11,14 @@ Este proyecto es una API en Laravel para gestionar órdenes y pagos. Incluye:
 * Transacciones DB para operaciones críticas
 * Tests unitarios y de feature
 
-## 🔧 Requisitos
+## Requisitos
 
 * PHP >= 8.x
 * Composer
 * Node.js & npm
 * MySQL (u otra BD compatible)
 
-## 📦 Instalación (rápida)
+## Instalación (rápida)
 
 Ejecuta los comandos desde la raíz del proyecto:
 
@@ -37,7 +32,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Configura tu `.env` (ejemplo mínimo):
+Configura tu `.env`
 
 ```
 DB_CONNECTION=mysql
@@ -55,14 +50,14 @@ Migraciones y servidor local:
 ```bash
 php artisan migrate
 php artisan serve
-# (Opcional según el proyecto) php artisan install:api
+php artisan install:api
 ```
 
-## 🐝 Configurar Beeceptor (para pruebas del gateway)
+## Configurar Beeceptor
 
-El proyecto está preparado para usar una URL de gateway externa (se sugiere Beeceptor para mocks).
+El proyecto está preparado para usar una URL de gateway externa
 
-1. Entra a [https://app.beeceptor.com/](https://app.beeceptor.com/) y crea un mock endpoint con un nombre (por ejemplo `mi-gateway-test`).
+1. Entra a [https://app.beeceptor.com/](https://app.beeceptor.com/) y crea un mock endpoint
 2. Beeceptor te dará una URL base tipo `https://mi-gateway-test.free.beeceptor.com`.
 3. En tu `.env` asigna `PAYMENT_GATEWAY_URL` con esa URL y agrega `/confirm` al final, por ejemplo:
 
@@ -106,9 +101,7 @@ PAYMENT_GATEWAY_URL=https://mi-gateway-test.free.beeceptor.com/confirm
   { "status": "failed", "reference": null }
   ```
 
-> Nota: en la práctica puedes apuntar a `/confirm` o a `/confirm/fail` según quieras simular éxito o fallo.
-
-## 🧭 Endpoints principales
+##  Endpoints principales
 
 > Prefijo: `/api`
 
@@ -143,7 +136,7 @@ PAYMENT_GATEWAY_URL=https://mi-gateway-test.free.beeceptor.com/confirm
 | GET       | `/api/payments/success`           | Listar pagos exitosos          |
 | GET       | `/api/payments/failed`            | Listar pagos fallidos          |
 
-## ✉️ Ejemplos rápidos
+## Ejemplos rápidos
 
 **Crear una orden** (POST `/api/orders/register`)
 
@@ -203,7 +196,7 @@ Respuesta (ejemplo):
 }
 ```
 
-## 🎯 Decisiones técnicas (resumen)
+## Decisiones técnicas (resumen)
 
 * **Transacciones DB** (`DB::transaction`) para operaciones compuestas (crear/actualizar/eliminar órdenes y pagos).
 * **Montos en centavos** (`amount_cents`) para evitar problemas de precisión.
@@ -212,7 +205,7 @@ Respuesta (ejemplo):
 * **Validaciones via FormRequest** (`StorePaymentRequest`, `UpdatePaymentRequest`, etc.).
 * **Tests**: Suite de Unit y Feature para validar comportamiento.
 
-## ✅ Tests
+## Tests
 
 Ejecutar todos los tests (Unit o Feature):
 
@@ -224,17 +217,3 @@ php artisan test --testsuite=Unit
 php artisan test --testsuite=Feature
 ```
 
-## 📌 Notas finales / Buenas prácticas
-
-* Para producción ajusta variables de `.env` (database, cache, env, app url).
-* Asegúrate de proteger las rutas sensibles con autenticación si el proyecto lo requiere.
-
----
-
-Si quieres, puedo:
-
-* Generar un `README.md` listo para subir (ya lo creé aquí).
-* Preparar un `PR` con un commit ejemplo (te paso comandos para hacerlo localmente).
-* Ajustarlo en inglés o agregar badges (build, phpunit, coverage).
-
-¡Dime qué prefieres y lo adapto!
