@@ -10,10 +10,10 @@ php artisan key:generate
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
-DB_PORT=3306
+DB_PORT=yourport
 DB_DATABASE=orderandpaymentapi
-DB_USERNAME=root
-DB_PASSWORD=secret
+DB_USERNAME=username
+DB_PASSWORD=yourpassword
 
 
 Para este proyecto se uso https://app.beeceptor.com/ debera ingresar y registrar un nombre para que se le genere una URL y al final de la url que te de agregarle /confirm
