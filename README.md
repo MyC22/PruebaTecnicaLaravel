@@ -189,7 +189,7 @@ Respuesta (ejemplo):
 }
 ```
 
-## Decisiones técnicas (resumen)
+## Decisiones técnicas Importantes
 
 * **Transacciones DB** (`DB::transaction`) para operaciones compuestas (crear/actualizar/eliminar órdenes y pagos).
 * **Montos en centavos** (`amount_cents`) para evitar problemas de precisión.
