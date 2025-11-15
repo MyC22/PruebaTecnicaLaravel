@@ -22,7 +22,7 @@ class OrderFactory extends Factory
             'customer_name' => $this->faker->name,
             'customer_email' => $this->faker->unique()->safeEmail,
             'customer_phone' => $this->faker->unique()->phoneNumber,
-            'total_amount' => $this->faker->randomFloat(2, 1, 1000), // ejemplo 503.50
+            'total_amount' => $this->faker->randomFloat(2, 1, 1000),
             'currency' => 'PEN',
             'status' => 'pending',
         ];

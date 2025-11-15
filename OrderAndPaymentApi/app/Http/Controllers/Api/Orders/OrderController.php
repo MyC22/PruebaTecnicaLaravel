@@ -30,7 +30,6 @@ class OrderController extends Controller
     {
         $data = $request->validated();
 
-        // Usar transacción por si se amplia el flujo
         $order = DB::transaction(function () use ($data) {
             return Order::create([
                 'customer_name' => $data['customer_name'],

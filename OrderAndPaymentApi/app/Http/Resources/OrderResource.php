@@ -36,7 +36,7 @@ class OrderResource extends JsonResource
     //         'customer_name' => $this->customer_name,
     //         'customer_email' => $this->customer_email,
     //         'customer_phone' => $this->customer_phone,
-    //         'total_amount' => $this->total_amount_formatted, // monto formateado en soles
+    //         'total_amount' => $this->total_amount_formatted,
     //         'currency' => $this->currency,
     //         'status' => $this->status,
     //         'attempts_count' => $this->when(isset($this->payments_count), $this->payments_count),
