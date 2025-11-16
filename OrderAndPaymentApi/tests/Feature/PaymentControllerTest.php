@@ -39,28 +39,38 @@ class PaymentControllerTest extends TestCase
 
     // test para crear un pago
     /** @test */
-    public function can_store_payment()
+    public function can_create_successful_payment()
     {
-        $order = Order::factory()->create(['total_amount' => 10000, 'status' => 'pending']);
+        $order = Order::factory()->create([
+            'total_amount' => 10550,
+            'status' => 'pending',
+        ]);
+        $mock = Mockery::mock(PaymentGatewayService::class);
+        $mock->shouldReceive('confirmPayment')
+            ->once()
+            ->andReturn(['status' => 'success', 'reference' => 'REF123']);
+        $this->app->instance(PaymentGatewayService::class, $mock);
+        $amount = $order->total_amount / 100;
 
-        $this->instance(PaymentGatewayService::class, Mockery::mock(PaymentGatewayService::class, function ($mock) {
-            $mock->shouldReceive('confirmPayment')
-                ->andReturn(['status' => 'success', 'reference' => 'REF123']);
-        }));
-
-        $payload = [
-            'amount' => 100,
+        $response = $this->postJson("/api/orders/{$order->id}/payments", [
+            'amount' => $amount,
             'payment_method' => 'tarjeta',
-        ];
-
-        $response = $this->postJson("/api/orders/{$order->id}/payments", $payload);
-
+        ]);
         $response->assertStatus(201)
+            ->assertJsonPath('data.status', 'success')
+            ->assertJsonPath('data.external_reference', 'REF123')
             ->assertJsonPath('message', 'Pago creado correctamente');
-
+        $responseAmount = floatval($response->json('data.amount'));
+        $this->assertEqualsWithDelta($amount, $responseAmount, 0.01);
         $this->assertDatabaseHas('payments', [
             'order_id' => $order->id,
             'status' => 'success',
+            'external_reference' => 'REF123',
+            'amount' => $order->total_amount
+        ]);
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'status' => 'paid',
         ]);
     }
 
@@ -71,16 +81,19 @@ class PaymentControllerTest extends TestCase
         $payment = Payment::factory()->create();
 
         $payload = [
-            'payment_method' => 'pagoefectivo', // cambiar 'efectivo' por uno válido
-            'amount' => 504.5, // opcional, si quieres actualizar también el monto
+            'payment_method' => 'pagoefectivo',
+            'amount' => 504.5,
         ];
 
         $response = $this->putJson("/api/payments/{$payment->id}/update", $payload);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.payment_method', 'pagoefectivo')
-            ->assertJsonPath('data.amount', 504.5); // si actualizas monto
+            ->assertJsonPath('data.amount', 504.5);
     }
+
+
+
 
 
     // test para remover un pago logicamente

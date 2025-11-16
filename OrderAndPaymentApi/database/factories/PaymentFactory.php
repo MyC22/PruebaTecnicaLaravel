@@ -22,9 +22,9 @@ class PaymentFactory extends Factory
     {
         return [
             'order_id' => Order::factory(),
-            'amount' => $this->faker->numberBetween(1000, 50000),
+            'amount' => $this->faker->numberBetween(10, 500),
+            'payment_method' => $this->faker->randomElement(['tarjeta', 'paypal', 'yape', 'pagoefectivo']),
             'status' => $this->faker->randomElement(['pending', 'success', 'failed']),
-            'payment_method' => $this->faker->randomElement(['card', 'paypal', 'transfer']),
             'attempt_number' => $this->faker->numberBetween(1, 3),
             'external_reference' => $this->faker->uuid(),
         ];

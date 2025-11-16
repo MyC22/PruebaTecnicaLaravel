@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Orders;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
+use App\Http\Requests\Orders\StoreOrderRequest;
+use App\Http\Requests\Orders\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
 
-    /*Listar*/
+    //Listar
     public function index(Request $request)
     {
         $orders = Order::withCount('payments')
@@ -25,7 +25,7 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    /* Registrar Orden */
+    //Registrar Orden
     public function store(StoreOrderRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -44,7 +44,7 @@ class OrderController extends Controller
         return (new OrderResource($order))->response()->setStatusCode(201);
     }
 
-    /*Buscar Orden por ID*/
+    //Buscar Orden por ID
     public function show($id): JsonResponse
     {
         $order = Order::with('payments')->find($id);
@@ -55,7 +55,7 @@ class OrderController extends Controller
         return response()->json(new OrderResource($order), 200);
     }
 
-    /*Actualizar*/
+    //Actualizar
     public function update(UpdateOrderRequest $request, $id): JsonResponse
     {
         $order = Order::withTrashed()->find($id);
@@ -94,7 +94,7 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /*Remover logicamente pero no fisicamente */
+    //Remover logicamente pero no fisicamente
     public function destroy($id): JsonResponse
     {
         $order = Order::withTrashed()->find($id);
@@ -118,7 +118,7 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /*Restaurar Orden Eliminada */
+    //Restaurar Orden Eliminada
     public function restore($id): JsonResponse
     {
         $order = Order::withTrashed()->find($id);
@@ -141,7 +141,7 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /*Listar ordenes eliminadas */
+    //Listar ordenes eliminadas
     public function trashed(Request $request)
     {
         $query = Order::onlyTrashed()->with('payments')->orderBy('deleted_at', 'desc');
@@ -159,7 +159,7 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    /*Mostrar orden elimiada especifica */
+    //Mostrar orden elimiada especifica
     public function showTrashed($id)
     {
         $order = Order::onlyTrashed()->find($id);
@@ -171,7 +171,7 @@ class OrderController extends Controller
         return response()->json(new OrderResource($order), 200);
     }
 
-    /*Listar ordenes con estado pending */
+    //Listar ordenes con estado pending
     public function pending(Request $request)
     {
         $query = Order::where('status', 'pending')
@@ -183,7 +183,7 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    /*Listar ordenes con estado paid */
+    //Listar ordenes con estado paid
     public function paid(Request $request)
     {
         $query = Order::where('status', 'paid')
@@ -195,7 +195,7 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    /*Listar ordenes con estado failed */
+    //Listar ordenes con estado failed
     public function failed(Request $request)
     {
         $query = Order::where('status', 'failed')

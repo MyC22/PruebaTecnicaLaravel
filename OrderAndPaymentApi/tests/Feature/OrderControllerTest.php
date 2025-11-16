@@ -40,7 +40,7 @@ class OrderControllerTest extends TestCase
 
         $this->assertDatabaseHas('orders', [
             'customer_email' => 'denis@example.com',
-            'total_amount' => 50350, // en centavos
+            'total_amount' => 50350,
         ]);
     }
 

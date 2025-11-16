@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePaymentRequest;
-use App\Http\Requests\UpdatePaymentRequest;
+use App\Http\Requests\Payment\StorePaymentRequest;
+use App\Http\Requests\Payment\UpdatePaymentRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Order;
 use App\Models\Payment;
@@ -78,7 +78,7 @@ class PaymentController extends Controller
 
         $attemptNumber = $order->payments()->count() + 1;
 
-        $amountInCents = $data['amount'] * 100;
+        $amountInCents = $data['amount'];
 
         $payment = DB::transaction(function () use ($order, $data, $attemptNumber, $amountInCents) {
             return Payment::create([
@@ -186,7 +186,7 @@ class PaymentController extends Controller
     }
 
 
-    /*Restaurar Pago Eliminado */
+    //Restaurar Pago Eliminado
     public function restore($id): JsonResponse
     {
         $payment = Payment::withTrashed()->find($id);
@@ -209,7 +209,7 @@ class PaymentController extends Controller
             ->setStatusCode(200);
     }
 
-    /*Listar Pagos eliminadas */
+    //Listar Pagos eliminadas 
     public function trashed(Request $request)
     {
         $payment = Payment::onlyTrashed()->with('order')->orderBy('deleted_at', 'desc');
@@ -227,7 +227,7 @@ class PaymentController extends Controller
         return PaymentResource::collection($payments);
     }
 
-    /*Mostrar Pago elimiado especifica */
+    //Mostrar Pago elimiado especifica
     public function showWithTrashed($id)
     {
         $payment = Payment::withTrashed()->with('order')->find($id);

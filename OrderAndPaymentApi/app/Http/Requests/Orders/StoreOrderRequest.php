@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Orders;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,7 +31,7 @@ class StoreOrderRequest extends FormRequest
             ],
             'customer_phone' => [
                 'string',
-                'max:50',
+                'max:20',
                 Rule::unique('orders', 'customer_phone'),
             ],
             'total_amount' => 'required|numeric|min:0',
