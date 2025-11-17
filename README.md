@@ -1,5 +1,13 @@
 # PruebaTecnicaLaravel
 
+## Decisiones técnicas Importantes
+
+* **Transacciones DB** (`DB::transaction`) para operaciones compuestas (crear/actualizar/eliminar órdenes y pagos).
+* **Montos en centavos** (`amount_cents`) para evitar problemas de precisión.
+* **SoftDeletes** para órdenes y pagos (posibilidad de restaurar).
+* **Estados y métodos como `string`** para mayor flexibilidad.
+* **Validaciones via FormRequest** (`StorePaymentRequest`, `UpdatePaymentRequest`, etc.).
+* **Tests**: Suite de Unit y Feature para validar comportamiento.
 
 ## Resumen
 
@@ -188,15 +196,6 @@ Respuesta (ejemplo):
   "message": "Pago creado correctamente"
 }
 ```
-
-## Decisiones técnicas Importantes
-
-* **Transacciones DB** (`DB::transaction`) para operaciones compuestas (crear/actualizar/eliminar órdenes y pagos).
-* **Montos en centavos** (`amount_cents`) para evitar problemas de precisión.
-* **SoftDeletes** para órdenes y pagos (posibilidad de restaurar).
-* **Estados y métodos como `string`** para mayor flexibilidad.
-* **Validaciones via FormRequest** (`StorePaymentRequest`, `UpdatePaymentRequest`, etc.).
-* **Tests**: Suite de Unit y Feature para validar comportamiento.
 
 ## Tests
 
